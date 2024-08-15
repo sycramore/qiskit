@@ -17,6 +17,8 @@ from __future__ import annotations
 import numpy as np
 from qiskit.circuit.quantumcircuit import QuantumCircuit
 from qiskit.circuit.exceptions import CircuitError
+import random
+from qiskit.quantum_info import Pauli
 
 
 class GraphState(QuantumCircuit):
@@ -84,3 +86,22 @@ class GraphState(QuantumCircuit):
 
         super().__init__(*circuit.qregs, name=circuit.name)
         self.compose(circuit.to_gate(), qubits=self.qubits, inplace=True)
+
+    def generate_stabilizer(self,adjacency_matrix):
+        num_generators = 2 #number of elements chosen from generator group, can be varied
+        generators = [[]]
+        generator_ints = random.sample(range(1,len(adjacency_matrix)),num_generators)
+        num_qubits = len(adjacency_matrix)
+        for i in range(num_qubits):
+            for j in range(num_qubits):
+                if i == j:
+                    generators[i][j] = 'X'
+                if adjacency_matrix[i][j] == 1:
+                    generators[i][j] == 'Z'
+                if adjacency_matrix[i][j] == 0:
+                    generators[i][j] == 'I'
+
+
+
+
+
